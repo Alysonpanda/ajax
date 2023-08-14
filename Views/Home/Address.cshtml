@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewData["Title"] = "Address";
+}
+
+<h1>Address</h1>
+<select id="selectCity"></select>
+<select id="selectDistrict"></select>
+<select id="selectRoad"></select>
+<div id="div1" class="alert alert-warning"></div>
+
+
+@section Styles{
+
+}
+
+@section Scripts{
+
+    <script>
+        const selCity=document.querySelector('#selectCity');
+        const selDistrict = document.querySelector('#selectDistrict');
+        const selRoad = document.querySelector('#selectRoad');
+        const theDiv = document.querySelector('#div1');
+
+        ////用function來建立標籤拉下來的動作
+        //function loadCity() {
+
+        //    //步驟一，建立ajax物件
+        //    const xhr = new XMLHttpRequest();
+
+        //    //步驟二，對伺服器發出要求
+        //    xhr.open('GET', '@Url.Content("/api/cities")');
+        //    xhr.send();
+
+        //    //步驟三，用load事件接收回傳結果
+        //    xhr.addEventListener('load', () => {
+
+        //        //步驟四，讀出回傳的結果
+        //        const datas = JSON.parse(xhr.responseText);
+
+        //        //步驟五，讀出的結果顯示在網頁上，${標籤裡的值}、${顯示字樣}
+        //        const cities = datas.map(city => `<option value='${city}'>${city}</option>`)
+
+        //        selCity.innerHTML = cities.join("");
+
+        //        loadDistrict()
+
+        //          })
+        //       }
+
+
+
+
+        //用fetch async await寫城市標籤
+            async function loadCity() {           
+            const response =await fetch('@Url.Content("~/api/Cities")')
+            const datas = await response.json()
+            const cities = datas.map(city => `<option value="${city}">${city}</option>`);
+                    document.querySelector('#selectCity').innerHTML = cities.join("");
+
+                    loadDistrict();                    
+        }
+
+        loadCity();
+        
+
+
+        //function loadDistrict() {
+
+        //    const xhr = new XMLHttpRequest();
+
+        //    xhr.open('GET', `@Url.Content("/api/Districts")?city=${selCity.value}`);
+        //    //?city=${selCity.value}是網址複製的路徑，代表City標籤選了什麼值，整段要改成反斜線才能用${}
+        //    xhr.send();
+
+        //    xhr.addEventListener('load', () => {
+
+        //        const datas = JSON.parse(xhr.responseText);
+
+        //        const districts = datas.map(district => `<option value='${district}'>${district}</option>`)
+
+        //        selDistrict.innerHTML = districts.join("");
+
+        //        loadRoad()
+        //    })
+        //}
+
+
+        //用fetch async await寫鄉鎮區標籤
+           async function loadDistrict() {            
+              const response =await fetch( `@Url.Content("~/api/Districts")?city=${selCity.value}`);
+              const datas= await response.json()
+              const districts = datas.map(district => `<option value='${district}'>${district}</option>`);
+                selDistrict.innerHTML = districts.join("");
+                
+                loadRoad();    
+
+        }
+
+        loadDistrict()
+
+
+        //function loadRoad() {
+
+        //    const xhr = new XMLHttpRequest();
+
+        //    xhr.open('GET', `@Url.Content("/api/Roads")?siteId=${selDistrict.value}`);
+        //    xhr.send();
+
+        //    xhr.addEventListener('load', () => {
+
+        //        const datas = JSON.parse(xhr.responseText);
+
+        //        const roads = datas.map(road => `<option value='${road}'>${road}</option>`)
+
+        //        selRoad.innerHTML = roads.join("");
+
+        //        show();
+
+        //    })
+        //}
+
+
+        //用fetch寫Road標籤
+
+          async function loadRoad() {
+             const response=await fetch (`@Url.Content("~/api/Roads")?siteId=${selDistrict.value}`);
+             const datas = await response.json()                    
+             const roads = datas.map(road => `<option value='${road}'>${road}</option>`);
+             selRoad.innerHTML = roads.join("");
+             show();                    
+        }
+
+     
+
+             //測試用，用div看有沒有抓到select裡的資料
+             selCity.addEventListener('change', () => {
+            //  theDiv.textContent = `${selCity.options[selCity.selectedIndex].text}-${selCity.options[selCity.selectedIndex].value} `
+                     theDiv.textContent = selCity.value;
+                     loadDistrict();
+                     //show();
+
+              })
+
+            selDistrict.addEventListener('change', () => {
+            //  theDiv.textContent = `${selCity.options[selCity.selectedIndex].text}-${selCity.options[selCity.selectedIndex].value} `
+                    theDiv.textContent += selDistrict.value;
+                    loadRoad();
+                    //show();
+             })
+
+            selRoad.addEventListener('change', show)
+            //  theDiv.textContent = `${selCity.options[selCity.selectedIndex].text}-${selCity.options[selCity.selectedIndex].value} `
+                //theDiv.textContent += selRoad.value;
+
+                function show() {
+                theDiv.textContent = `${selDistrict.value} ${selRoad.value}`;
+            
+           }
+
+       
+
+
+
+
+    </script>
+}
+

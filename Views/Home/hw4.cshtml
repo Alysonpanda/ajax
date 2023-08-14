@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "hw4";
+}
+
+<h4>作業四 const cities = ["台北市","新北市","桃園市","台中市", "台南市","高雄市"]</h4>
+<select id="city"></select>
+<span id="span" style="background-color:palevioletred"></span>
+
+
+
+@section Styles{
+
+}
+
+@section Scripts{
+    <script>
+
+        const selCity =document.querySelector('#city');
+        const mySpan=document.querySelector('#span');
+        const cities = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"]
+
+             //全部叫出來
+                for(let i=0  ; i<cities.length; i++){
+                        const option = document.createElement('option');
+                        option.value = cities[i];
+                        option.text = cities[i];
+                        selCity.appendChild(option);
+                        show();
+                    }            
+
+            selCity.addEventListener('change', show )
+               
+            function show() {
+                //theDiv.textContent = `${selDistrict.value} ${selRoad.value}`;
+
+               mySpan.textContent = selCity.value;            
+               
+            }
+        
+
+    </script>
+
+}

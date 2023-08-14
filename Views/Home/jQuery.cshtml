@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewData["Title"] = "jQuery";
+}
+
+<h1>jQuery</h1>
+<button id="buttonGet" class="btn btn-primary">get</button>
+<button id="buttonPost" class="btn btn-secondary">post</button>
+<button id="buttonJson" class="btn btn-success">getJson</button>
+<button id="buttonLoad" class="btn btn-info">load</button>
+<button id="buttonAjax" class="btn btn-warning">ajax</button>
+<button id="buttonCors" class="btn btn-danger">cors</button>
+<div class="alert alert-dark mt-3 w-50" role="alert" id="divAlert">
+    <span></span>
+    <ul>
+
+    </ul>
+</div>
+@section Scripts{
+    <script>
+
+        //get
+        $('#buttonGet').click(function () {
+            $.get('@Url.Content("~/api/getdemo")' , { "name":"aly" ,  "age":5 } , function (data)
+            {
+               $('#divAlert>span').text(data)
+            })         
+        })
+
+        //post
+        $('#buttonPost').click(function () {
+            $.post('@Url.Content("~/api/getdemo")', { "name": "panda", "age":  7 }, function (data) {
+                $('#divAlert>span').text(data)
+            })
+        })
+
+        //getJSON
+        $('#buttonJson').click(function () {
+            $.getJSON('@Url.Content("~/api/Cities")' , function ( datas)         //沒有參數就不用傳，直接function，getJson就不用轉型
+            {
+                //$('#divAlert').text("JSON")
+                //$.each( datas , function ( idx , city)                  //要用迴圈each才列的出資料，idx是index，城市前面的序號
+                //{
+                //    console.log (city)
+                //})
+
+                const theUl = $('#divAlert>ul');    //先定義網頁上的畫面，不要把選擇器放進迴圈
+                const docFrag = $(document.createDocumentFragment()) //建立一個空元素(容器)
+
+                $.each( datas , function (idx , city)   //跑迴圈把city放進去
+                {
+                    const item = $('<li></li>').text(city)       //在迴圈裡產生<li>和city，等於item，列出一顆顆蘋果
+                    docFrag.append(item)                          //append是一個一個加進去，把item放進容器裡，把一顆顆蘋果裝進塑膠袋
+                })
+                theUl.html(docFrag)                              //在UI上顯示整袋蘋果
+            })        
+        })
+
+        //Partial1
+        //$('#buttonLoad').click(function () {
+        //    //$('#divAlert').text("LOAD")
+
+        //    $('#divAlert').load('@Url.Content("~/home/Partial1")')    //這裡的Partial1代表view的名稱
+        //})
+
+        //Partial2
+        $('#buttonLoad').click(function () {
+            //$('#divAlert').text("LOAD")
+
+            $('#divAlert').load('@Url.Content("~/home/Partial2")')        //這裡的Partial2因方法有設Viewbag，代表的是Action的名稱，再回傳同名的Partial2的View
+
+        })
+
+        //Ajax
+        $('#buttonAjax').click(function () {
+            $.ajax( {
+                'url': '@Url.Content("~/api/Cities")',  //'@Url.Content("~/api/getdemo")',
+                'type': 'get',  //get也可改成post
+                //'data': { "name": "Fiona", "age": 32},      //可直接輸入資料
+                'dataType': 'json'                                           //若知道要回傳的資料是什麼類型，可直接定義
+                //'contentType':'json'
+                //'success':function(data){                          //請求的回應成功時會呼叫名為success的函式，現在多用.done
+                //    $('#divAlert').text(data)
+                //}
+            })
+                .done(function (data) {                                //用city蘋果當舉例
+                   
+                    const theUl = $('#divAlert>ul');
+                    const docFrag = $(document.createDocumentFragment()) //建立一個空元素(容器)
+                    
+                    $.each (data, function (idx, city) {
+                        const item = $('<li></li>').text(city)
+                        docFrag.append(item)
+                    })
+                      theUl.html(docFrag)    
+                })           
+            //$('#divAlert').text("AJAX")
+        })
+
+
+        $('#buttonCors').click(function () {
+            //$('#divAlert').text("CORs")
+            $.getJSON(  'https://localhost:7283/api/Shippers' , function (datas) {
+
+            console.log(datas)
+            
+            } )
+
+        })
+
+    </script>
+}

@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewData["Title"] = "Travel";
+}
+
+<h1>Travel</h1>
+
+
+
+<div class="card" style="width: 18rem;" id="travelCard">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title" id="cardTitle" >Card title</h5>
+        <p class="card-text" id="cardText">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+
+
+
+
+@section Styles{
+
+}
+
+
+
+@section Scripts{
+
+    <script src="~/datas/travel.js"></script>
+    <script>
+        //console.log(datas)
+
+        const datas = emp.employees.map(travel => {
+
+
+            const { stitle, xbody } = travel
+           
+            
+            return (
+                <div class= "card" style = "width: 18rem;" id = "travelCard" >
+                    <img src="..." class="card-img-top" alt = "..." >
+                        <div class="card-body" >
+                            <h5 class="card-title" id = "cardTitle" > ${ stitle } </h5>
+                                < p class="card-text" id = "cardText" > ${xbody} </p>
+                               < a href = "#" class="btn btn-primary" > Go somewhere </a>
+                   </div>
+                </div>
+
+            )
+        })
+        document.querySelector('#empTable>tbody').innerHTML = datas.join("")
+
+
+
+
+
+
+    </script>
+
+
+
+}
